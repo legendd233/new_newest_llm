@@ -11,6 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.New_newest_llm">
+
+        <!-- 登录界面（启动页） -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -20,15 +22,16 @@
             </intent-filter>
         </activity>
 
-        <!--        <activity-->
-        <!--            android:name=".MainActivity"-->
-        <!--            android:exported="true">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="android.intent.action.MAIN" />-->
+        <!-- 主页面 -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
 
-        <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-        <!--            </intent-filter>-->
-        <!--        </activity>-->
+        <!-- 收藏界面（新增） -->
+        <activity
+            android:name=".FavoritesActivity"
+            android:exported="true" />
+
     </application>
 
 </manifest>
