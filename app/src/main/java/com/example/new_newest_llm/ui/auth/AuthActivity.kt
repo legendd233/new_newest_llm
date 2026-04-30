@@ -1,10 +1,10 @@
 package com.example.new_newest_llm.ui.auth
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.new_newest_llm.MainActivity
+import androidx.navigation.fragment.NavHostFragment
+import com.example.new_newest_llm.R
 import com.example.new_newest_llm.data.remote.RetrofitClient
 import com.example.new_newest_llm.data.repository.AuthRepository
 import com.example.new_newest_llm.data.repository.Result
@@ -36,8 +36,7 @@ class AuthActivity : AppCompatActivity() {
             val repository = AuthRepository(tokenManager)
             when (repository.validateToken()) {
                 is Result.Success -> {
-                    startActivity(Intent(this@AuthActivity, MainActivity::class.java))
-                    finish()
+                    navigateToFeed()
                 }
                 is Result.Error -> {
                     // Token invalid, stay on login page
@@ -45,5 +44,16 @@ class AuthActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun navigateToFeed() {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        // Clear the auth back stack, then navigate to feed so user can't go back to login
+        navController.navigate(R.id.feedFragment, null,
+            androidx.navigation.NavOptions.Builder()
+                .setPopUpTo(R.id.nav_graph, true)
+                .build())
     }
 }

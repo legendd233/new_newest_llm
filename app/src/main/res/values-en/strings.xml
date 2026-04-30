@@ -38,6 +38,24 @@
     <string name="err_token_revoked">Session expired, please log in again</string>
     <string name="err_network">Network error, please retry later</string>
 
+    <!-- Feed -->
+    <string name="feed">Feed</string>
+    <string name="feed_load_error">Failed to load, please check your network</string>
+    <string name="feed_empty">No articles yet</string>
+    <string name="retry">Retry</string>
+    <string name="favorite_coming_soon">Favorite feature coming soon</string>
+    <string name="view_original">View Original</string>
+    <string name="back">Back</string>
+    <string name="tags">Tags</string>
+    <string name="article_detail">Article Detail</string>
+    <string name="score_format">Score: %s</string>
+    <string name="published_format">Published on %s</string>
+    <string name="favorite">Favorite</string>
+
+    <!-- Nav -->
+    <string name="nav_home">Home</string>
+    <string name="nav_favorites">Favorites</string>
+
     <!-- Misc -->
     <string name="logout">Logout</string>
     <string name="logout_confirm">Are you sure you want to logout?</string>

@@ -17,7 +17,7 @@ object RetrofitClient {
         tokenManager = tm
     }
 
-    val authApi: AuthApi by lazy {
+    private val retrofit: Retrofit by lazy {
         val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
@@ -29,12 +29,13 @@ object RetrofitClient {
             .readTimeout(15, TimeUnit.SECONDS)
             .build()
 
-        val retrofit = Retrofit.Builder()
+        Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
-        retrofit.create(AuthApi::class.java)
     }
+
+    val authApi: AuthApi by lazy { retrofit.create(AuthApi::class.java) }
+    val feedApi: FeedApi by lazy { retrofit.create(FeedApi::class.java) }
 }

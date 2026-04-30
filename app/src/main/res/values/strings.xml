@@ -38,6 +38,24 @@
     <string name="err_token_revoked">登录状态已失效，请重新登录</string>
     <string name="err_network">网络错误，请稍后重试</string>
 
+    <!-- Feed -->
+    <string name="feed">资讯推送</string>
+    <string name="feed_load_error">加载失败，请检查网络连接</string>
+    <string name="feed_empty">暂无资讯</string>
+    <string name="retry">重试</string>
+    <string name="favorite_coming_soon">收藏功能即将上线</string>
+    <string name="view_original">查看原文</string>
+    <string name="back">返回</string>
+    <string name="tags">标签</string>
+    <string name="article_detail">文章详情</string>
+    <string name="score_format">相关度：%s</string>
+    <string name="published_format">发布于 %s</string>
+    <string name="favorite">收藏</string>
+
+    <!-- Nav -->
+    <string name="nav_home">首页</string>
+    <string name="nav_favorites">收藏</string>
+
     <!-- Misc -->
     <string name="logout">退出登录</string>
     <string name="logout_confirm">确定要退出登录吗？</string>
