@@ -1,13 +1,17 @@
 package com.example.new_newest_llm;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.new_newest_llm.ui.auth.AuthActivity;
+import com.example.new_newest_llm.utils.TokenManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -66,7 +70,23 @@ public class MainActivity extends AppCompatActivity {
         });
 
         navProfile.setOnClickListener(v -> {
-            Toast.makeText(MainActivity.this, "个人中心（待开发）", Toast.LENGTH_SHORT).show();
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle(R.string.logout)
+                    .setMessage(R.string.logout_confirm)
+                    .setPositiveButton(R.string.logout, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            TokenManager tokenManager = new TokenManager(MainActivity.this);
+                            tokenManager.clearToken();
+                            Toast.makeText(MainActivity.this, R.string.logout_success, Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(MainActivity.this, AuthActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
         });
     }
 
