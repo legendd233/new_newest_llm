@@ -9,15 +9,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.new_newest_llm.FavoritesActivity
 import com.example.new_newest_llm.R
+import com.example.new_newest_llm.data.repository.FavoriteRepository
 import com.example.new_newest_llm.data.repository.FeedRepository
 import com.example.new_newest_llm.databinding.FragmentFeedBinding
 import com.example.new_newest_llm.ui.auth.AuthActivity
+import com.example.new_newest_llm.ui.common.FavoriteSyncViewModel
 import com.example.new_newest_llm.utils.TokenManager
 import com.google.gson.Gson
 
@@ -28,6 +30,7 @@ class FeedFragment : Fragment() {
     private lateinit var viewModel: FeedViewModel
     private lateinit var adapter: FeedAdapter
     private val gson = Gson()
+    private val syncViewModel: FavoriteSyncViewModel by activityViewModels()
     private var savedFirstVisiblePosition = RecyclerView.NO_POSITION
     private var savedFirstVisibleOffset = 0
     private var hasLoadedOnce = false
@@ -46,9 +49,10 @@ class FeedFragment : Fragment() {
 
         val tokenManager = TokenManager(requireContext().applicationContext)
         val repository = FeedRepository(tokenManager)
+        val favoriteRepository = FavoriteRepository(tokenManager)
         viewModel = ViewModelProvider(
             this,
-            FeedViewModelFactory(repository)
+            FeedViewModelFactory(repository, favoriteRepository)
         )[FeedViewModel::class.java]
 
         setupRecyclerView()
@@ -68,9 +72,7 @@ class FeedFragment : Fragment() {
     private fun setupRecyclerView() {
         adapter = FeedAdapter(
             onItemClick = { item -> viewModel.onItemClicked(item) },
-            onFavoriteClick = {
-                Toast.makeText(requireContext(), R.string.favorite_coming_soon, Toast.LENGTH_SHORT).show()
-            }
+            onFavoriteClick = { item -> viewModel.toggleFavorite(item) }
         )
         binding.rvFeed.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFeed.adapter = adapter
@@ -78,7 +80,7 @@ class FeedFragment : Fragment() {
 
     private fun setupBottomNav(tokenManager: TokenManager) {
         binding.navFavorites.setOnClickListener {
-            startActivity(Intent(requireActivity(), FavoritesActivity::class.java))
+            findNavController().navigate(R.id.action_feed_to_favorites)
         }
 
         binding.navMe.setOnClickListener {
@@ -154,6 +156,23 @@ class FeedFragment : Fragment() {
                 viewModel.onNavigationToLoginHandled()
             }
         }
+
+        viewModel.toastError.observe(viewLifecycleOwner) { errorCode ->
+            errorCode?.let {
+                showError(it)
+                viewModel.onToastShown()
+            }
+        }
+
+        syncViewModel.changes.observe(viewLifecycleOwner) { changeMap ->
+            changeMap.forEach { (id, fav) -> viewModel.applyFavoriteChange(id, fav) }
+        }
+    }
+
+    private fun showError(errorCode: String) {
+        val resId = resources.getIdentifier(errorCode, "string", requireContext().packageName)
+        val message = if (resId != 0) getString(resId) else errorCode
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {

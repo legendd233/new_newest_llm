@@ -27,21 +27,6 @@
             </intent-filter>
         </activity>
 
-        <!-- 登录界面 -->
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
-
-        <!-- 主页面 -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
-
-        <!-- 收藏界面 -->
-        <activity
-            android:name=".FavoritesActivity"
-            android:exported="false" />
-
     </application>
 
 </manifest>

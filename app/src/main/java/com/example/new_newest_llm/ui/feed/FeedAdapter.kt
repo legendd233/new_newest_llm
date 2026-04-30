@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.new_newest_llm.R
 import com.example.new_newest_llm.data.model.FeedItem
 import com.example.new_newest_llm.databinding.ItemFeedCardBinding
 
@@ -33,6 +34,11 @@ class FeedAdapter(
             binding.tvSummary.text = item.displaySummary
             binding.tvAuthor.text = String.format("%.2f", item.score)
             binding.tvPublishedAt.text = item.formattedPublishedAt
+
+            binding.btnFavorite.setImageResource(
+                if (item.isFavorited) R.drawable.ic_favorite_filled
+                else R.drawable.ic_favorite_border
+            )
 
             binding.root.setOnClickListener { onItemClick(item) }
             binding.btnFavorite.setOnClickListener { onFavoriteClick(item) }

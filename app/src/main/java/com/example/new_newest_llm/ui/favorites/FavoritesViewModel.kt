@@ -1,4 +1,4 @@
-package com.example.new_newest_llm.ui.feed
+package com.example.new_newest_llm.ui.favorites
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,17 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.new_newest_llm.data.model.FeedItem
 import com.example.new_newest_llm.data.repository.FavoriteRepository
-import com.example.new_newest_llm.data.repository.FeedRepository
 import com.example.new_newest_llm.data.repository.Result
 import kotlinx.coroutines.launch
 
-class FeedViewModel(
-    private val repository: FeedRepository,
+class FavoritesViewModel(
     private val favoriteRepository: FavoriteRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableLiveData<FeedUiState>(FeedUiState.Loading)
-    val uiState: LiveData<FeedUiState> = _uiState
+    private val _uiState = MutableLiveData<FavoritesUiState>(FavoritesUiState.Loading)
+    val uiState: LiveData<FavoritesUiState> = _uiState
 
     private val _navigateToDetail = MutableLiveData<FeedItem?>(null)
     val navigateToDetail: LiveData<FeedItem?> = _navigateToDetail
@@ -27,26 +25,29 @@ class FeedViewModel(
     private val _toastError = MutableLiveData<String?>(null)
     val toastError: LiveData<String?> = _toastError
 
+    private val _favoriteChanged = MutableLiveData<Pair<Int, Boolean>?>(null)
+    val favoriteChanged: LiveData<Pair<Int, Boolean>?> = _favoriteChanged
+
     private var currentItems: List<FeedItem> = emptyList()
 
-    fun loadFeed() {
-        _uiState.value = FeedUiState.Loading
+    fun loadFavorites() {
+        _uiState.value = FavoritesUiState.Loading
         viewModelScope.launch {
-            when (val result = repository.getFeed()) {
+            when (val result = favoriteRepository.getFavorites()) {
                 is Result.Success -> {
                     val items = result.data.items
                     currentItems = items
                     _uiState.value = if (items.isEmpty()) {
-                        FeedUiState.Empty
+                        FavoritesUiState.Empty
                     } else {
-                        FeedUiState.Success(items)
+                        FavoritesUiState.Success(items)
                     }
                 }
                 is Result.Error -> {
                     if (isAuthError(result.code)) {
                         _navigateToLogin.value = true
                     } else {
-                        _uiState.value = FeedUiState.Error(result.code)
+                        _uiState.value = FavoritesUiState.Error(result.code)
                     }
                 }
             }
@@ -69,23 +70,32 @@ class FeedViewModel(
         _toastError.value = null
     }
 
-    fun toggleFavorite(item: FeedItem) {
-        val newState = !item.isFavorited
-        applyFavoriteChange(item.id, newState)
+    fun onFavoriteChangePublished() {
+        _favoriteChanged.value = null
+    }
+
+    fun unfavorite(item: FeedItem) {
+        if (!item.isFavorited) return
+        val previous = currentItems
+        val updated = currentItems.filterNot { it.id == item.id }
+        currentItems = updated
+        _uiState.value = if (updated.isEmpty()) {
+            FavoritesUiState.Empty
+        } else {
+            FavoritesUiState.Success(updated)
+        }
 
         viewModelScope.launch {
-            val result = if (newState) {
-                favoriteRepository.addFavorite(item.id)
-            } else {
-                favoriteRepository.removeFavorite(item.id)
-            }
-            when (result) {
-                is Result.Success -> Unit
+            when (val result = favoriteRepository.removeFavorite(item.id)) {
+                is Result.Success -> {
+                    _favoriteChanged.value = item.id to false
+                }
                 is Result.Error -> {
                     if (isAuthError(result.code)) {
                         _navigateToLogin.value = true
                     } else {
-                        applyFavoriteChange(item.id, !newState)
+                        currentItems = previous
+                        _uiState.value = FavoritesUiState.Success(previous)
                         _toastError.value = "err_favorite_failed"
                     }
                 }
@@ -93,18 +103,17 @@ class FeedViewModel(
         }
     }
 
-    fun applyFavoriteChange(itemId: Int, isFavorited: Boolean) {
-        val updated = currentItems.map { existing ->
-            if (existing.id == itemId && existing.isFavorited != isFavorited) {
-                existing.copy(isFavorited = isFavorited)
-            } else {
-                existing
-            }
+    fun applyExternalChange(itemId: Int, isFavorited: Boolean) {
+        if (isFavorited) {
+            return
         }
-        if (updated === currentItems) return
+        val updated = currentItems.filterNot { it.id == itemId }
+        if (updated.size == currentItems.size) return
         currentItems = updated
-        if (_uiState.value is FeedUiState.Success) {
-            _uiState.value = FeedUiState.Success(updated)
+        _uiState.value = if (updated.isEmpty()) {
+            FavoritesUiState.Empty
+        } else {
+            FavoritesUiState.Success(updated)
         }
     }
 

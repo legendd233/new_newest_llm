@@ -1,6 +1,5 @@
 package com.example.new_newest_llm.ui.auth
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.new_newest_llm.MainActivity
 import com.example.new_newest_llm.R
 import com.example.new_newest_llm.data.repository.AuthRepository
 import com.example.new_newest_llm.databinding.FragmentLoginBinding
@@ -68,8 +66,7 @@ class LoginFragment : Fragment() {
 
             if (state.loginSuccess) {
                 Toast.makeText(requireContext(), R.string.login_success, Toast.LENGTH_SHORT).show()
-                startActivity(Intent(requireActivity(), MainActivity::class.java))
-                requireActivity().finish()
+                findNavController().navigate(R.id.action_login_to_feed)
             }
 
             state.errorMessage?.let { showError(it) }

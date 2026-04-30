@@ -1,19 +1,17 @@
-package com.example.new_newest_llm.ui.feed
+package com.example.new_newest_llm.ui.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.new_newest_llm.data.repository.FavoriteRepository
-import com.example.new_newest_llm.data.repository.FeedRepository
 
-class FeedViewModelFactory(
-    private val repository: FeedRepository,
+class FavoritesViewModelFactory(
     private val favoriteRepository: FavoriteRepository
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(FeedViewModel::class.java)) {
-            return FeedViewModel(repository, favoriteRepository) as T
+        if (modelClass.isAssignableFrom(FavoritesViewModel::class.java)) {
+            return FavoritesViewModel(favoriteRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }

@@ -38,4 +38,5 @@ object RetrofitClient {
 
     val authApi: AuthApi by lazy { retrofit.create(AuthApi::class.java) }
     val feedApi: FeedApi by lazy { retrofit.create(FeedApi::class.java) }
+    val favoriteApi: FavoriteApi by lazy { retrofit.create(FavoriteApi::class.java) }
 }

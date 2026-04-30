@@ -43,8 +43,10 @@
     <string name="feed_load_error">Failed to load, please check your network</string>
     <string name="feed_empty">No articles yet</string>
     <string name="retry">Retry</string>
-    <string name="favorite_coming_soon">Favorite feature coming soon</string>
     <string name="view_original">View Original</string>
+    <string name="favorites_title">My Favorites</string>
+    <string name="favorites_empty">No favorites yet, add some from the feed</string>
+    <string name="err_favorite_failed">Action failed, please retry later</string>
     <string name="back">Back</string>
     <string name="tags">Tags</string>
     <string name="article_detail">Article Detail</string>
