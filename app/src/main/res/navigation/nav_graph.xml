@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.new_newest_llm.ui.auth.LoginFragment"
+        android:label="@string/login">
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_login_to_forgot_password"
+            app:destination="@id/forgotPasswordFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.new_newest_llm.ui.auth.RegisterFragment"
+        android:label="@string/register" />
+
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.example.new_newest_llm.ui.auth.ForgotPasswordFragment"
+        android:label="@string/forgot_password" />
+
+</navigation>

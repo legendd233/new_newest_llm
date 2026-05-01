@@ -4,4 +4,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="gray">#FF808080</color>
+
+    <color name="primary">#FF1A237E</color>
+    <color name="primary_variant">#FF000051</color>
+    <color name="accent">#FF00BCD4</color>
+    <color name="on_primary">#FFFFFFFF</color>
+    <color name="on_accent">#FF000000</color>
 </resources>
