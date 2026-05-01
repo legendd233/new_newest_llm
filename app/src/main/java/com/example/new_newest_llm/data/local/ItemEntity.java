@@ -49,6 +49,9 @@ public class ItemEntity {
     @ColumnInfo(name = "is_read")
     public boolean isRead;
 
+    @ColumnInfo(name = "display_rank")
+    public int displayRank;
+
     public static ItemEntity fromFeedItem(FeedItem item) {
         ItemEntity entity = new ItemEntity();
         entity.id = item.id;
@@ -65,6 +68,7 @@ public class ItemEntity {
         entity.publishedAt = item.publishedAt;
         entity.fetchedAt = item.fetchedAt;
         entity.isFavorited = item.isFavorited;
+        entity.displayRank = item.rank;
         return entity;
     }
 

@@ -41,10 +41,18 @@
     <!-- Feed / Favorites -->
     <string name="favorite_saved">已收藏</string>
     <string name="favorite_removed">已取消收藏</string>
+    <string name="translate_button">翻译为中文</string>
+    <string name="view_original">查看原文 →</string>
+    <string name="translating">翻译中…</string>
 
     <!-- Misc -->
-    <string name="logout">退出登录</string>
+<string name="logout">退出登录</string>
     <string name="logout_confirm">确定要退出登录吗？</string>
     <string name="logout_success">已退出登录</string>
+    <string name="nav_home">首页</string>
+    <string name="nav_favorites">收藏</string>
     <string name="nav_me">我的</string>
+    <string name="nav_home_title">首页</string>
+    <string name="nav_favorites_title">我的收藏</string>
+    <string name="nav_empty_favorites">暂无收藏，去首页添加吧～</string>
 </resources>

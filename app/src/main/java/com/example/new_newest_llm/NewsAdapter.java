@@ -13,27 +13,61 @@ import com.example.new_newest_llm.data.local.ItemEntity;
 import com.example.new_newest_llm.utils.LocaleHelper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     private List<ItemEntity> newsList;
     private final OnFavoriteClickListener onFavoriteClick;
+    private final OnTranslateListener onTranslateClick;
     private final Context appContext;
     private final Set<Integer> expandedPositions = new HashSet<>();
+    private final Set<Integer> translatingPositions = new HashSet<>();
+    private final Map<Integer, String> translatedCache = new HashMap<>();
 
-    // 点击监听接口
     public interface OnFavoriteClickListener {
         void onClick(ItemEntity item, int position);
     }
 
-    public NewsAdapter(Context context, List<ItemEntity> newsList, OnFavoriteClickListener listener) {
+    public interface OnTranslateListener {
+        void onTranslate(ItemEntity item, int position);
+    }
+
+    public NewsAdapter(Context context, List<ItemEntity> newsList,
+                       OnFavoriteClickListener favListener,
+                       OnTranslateListener translateListener) {
         this.appContext = context.getApplicationContext();
         this.newsList = newsList;
-        this.onFavoriteClick = listener;
+        this.onFavoriteClick = favListener;
+        this.onTranslateClick = translateListener;
+    }
+
+    /** 外部调用来标记翻译中状态 */
+    public void setTranslating(int position, boolean translating) {
+        if (translating) {
+            translatingPositions.add(position);
+        } else {
+            translatingPositions.remove(position);
+        }
+        notifyItemChanged(position);
+    }
+
+    /** 翻译完成后存入缓存并刷新 */
+    public void setTranslated(int position, String translatedText) {
+        translatingPositions.remove(position);
+        translatedCache.put(position, translatedText);
+        notifyItemChanged(position);
+    }
+
+    /** 翻译失败恢复按钮 */
+    public void clearTranslating(int position) {
+        translatingPositions.remove(position);
+        notifyItemChanged(position);
     }
 
     private boolean isChinese() {
@@ -98,7 +132,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             }
             holder.llStats.setVisibility(hasStats ? View.VISIBLE : View.GONE);
 
-            // 正文：优先当前语言的完整摘要
+            // 正文摘要（描述部分，不含 README）
             String bodyText = pickBodyText(item);
             if (bodyText != null) {
                 holder.tvBody.setText(bodyText);
@@ -107,8 +141,20 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 holder.tvBody.setVisibility(View.GONE);
             }
 
-            // 中文翻译（仅当正文是英文且有中文翻译时才显示）
-            String zhText = pickZhOnly(item);
+            // README（摘要后面的 README 正文）
+            String readme = pickReadme(item);
+            if (readme != null) {
+                holder.tvLabelReadme.setText("README");
+                holder.tvLabelReadme.setVisibility(View.VISIBLE);
+                holder.tvReadme.setText(readme);
+                holder.tvReadme.setVisibility(View.VISIBLE);
+            } else {
+                holder.tvLabelReadme.setVisibility(View.GONE);
+                holder.tvReadme.setVisibility(View.GONE);
+            }
+
+            // 中文翻译：优先检查手动翻译缓存，其次检查预存中文翻译
+            String zhText = pickZhOnly(item, position);
             if (zhText != null) {
                 holder.tvLabelZh.setVisibility(View.VISIBLE);
                 holder.tvSummaryZh.setText(zhText);
@@ -162,8 +208,22 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 holder.tvSemanticTags.setVisibility(View.GONE);
             }
 
+            // 翻译按钮
+            boolean isTranslating = translatingPositions.contains(position);
+            if (isTranslating) {
+                holder.tvTranslate.setText(isChinese() ? "翻译中…" : "Translating…");
+                holder.tvTranslate.setClickable(false);
+            } else {
+                holder.tvTranslate.setText(isChinese() ? "翻译为中文" : "Translate");
+                holder.tvTranslate.setClickable(true);
+            }
+            holder.tvTranslate.setOnClickListener(v -> {
+                if (onTranslateClick != null && !translatingPositions.contains(position)) {
+                    onTranslateClick.onTranslate(item, position);
+                }
+            });
+
             // 查看原文
-            holder.tvOpenUrl.setText(isChinese() ? "查看原文 →" : "View Original →");
             holder.tvOpenUrl.setOnClickListener(v -> {
                 if (item.url != null && !item.url.isEmpty()) {
                     android.content.Intent intent = new android.content.Intent(
@@ -190,39 +250,60 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     // ---- 摘要选择 ----
 
-    /** 折叠态预览：短摘要 > 当前语言完整摘要 > 另一种语言 */
+    /** 从 summary_en 中切出描述部分（--- 之前），--- 之后是 README */
+    private static String stripReadme(String text) {
+        if (text == null || text.isEmpty()) return null;
+        int idx = text.indexOf("\n\n---\n\n");
+        if (idx < 0) return text;
+        return text.substring(0, idx);
+    }
+
+    /** 从 summary_en 中切出 README 部分（--- 之后），没有则返回 null */
+    private static String extractReadme(String text) {
+        if (text == null || text.isEmpty()) return null;
+        int idx = text.indexOf("\n\n---\n\n");
+        if (idx < 0) return null;
+        String readme = text.substring(idx + 8);
+        return readme.isEmpty() ? null : readme;
+    }
+
+    /** 折叠态预览：短摘要 > 当前语言完整摘要（去 README） > 另一种语言 */
     private String pickPreviewText(ItemEntity item) {
         String shortText = isChinese() ? item.summaryShortZh : item.summaryShortEn;
         if (shortText != null && !shortText.isEmpty()) return shortText;
+        // 只展示描述，不展示 README
         String fullText = isChinese() ? item.summaryZh : item.summaryEn;
-        if (fullText != null && !fullText.isEmpty()) return fullText;
-        String other = isChinese() ? item.summaryEn : item.summaryZh;
+        String stripped = stripReadme(fullText);
+        if (stripped != null && !stripped.isEmpty()) return stripped;
+        String other = stripReadme(isChinese() ? item.summaryEn : item.summaryZh);
         if (other != null && !other.isEmpty()) return other;
         return null;
     }
 
-    /** 展开态正文：当前语言完整摘要 > 另一种语言 > 短摘要 */
+    /** 展开态正文：当前语言完整摘要（去 README） > 另一种语言 > 短摘要 */
     private String pickBodyText(ItemEntity item) {
         String fullText = isChinese() ? item.summaryZh : item.summaryEn;
-        if (fullText != null && !fullText.isEmpty()) return fullText;
-        String other = isChinese() ? item.summaryEn : item.summaryZh;
+        String stripped = stripReadme(fullText);
+        if (stripped != null && !stripped.isEmpty()) return stripped;
+        String other = stripReadme(isChinese() ? item.summaryEn : item.summaryZh);
         if (other != null && !other.isEmpty()) return other;
         String shortText = isChinese() ? item.summaryShortZh : item.summaryShortEn;
         if (shortText != null && !shortText.isEmpty()) return shortText;
         return null;
     }
 
-    /** 仅当正文是英文且中文翻译存在时才返回中文文本 */
-    private String pickZhOnly(ItemEntity item) {
-        // 如果正文已经是中文，不重复显示
-        String bodyText = pickBodyText(item);
-        if (bodyText != null && bodyText.equals(item.summaryZh)) return null;
-        // 有中文内容且与正文不同
-        if (item.summaryZh != null && !item.summaryZh.isEmpty()) return item.summaryZh;
-        if (item.summaryShortZh != null && !item.summaryShortZh.isEmpty()
-                && (bodyText == null || !item.summaryShortZh.equals(bodyText)))
-            return item.summaryShortZh;
+    /** 展开态拿 README 部分（英文 summary_en 中的 --- 之后） */
+    private String pickReadme(ItemEntity item) {
+        String readme = extractReadme(item.summaryEn);
+        if (readme != null && !readme.isEmpty()) return readme;
+        readme = extractReadme(item.summaryZh);
+        if (readme != null && !readme.isEmpty()) return readme;
         return null;
+    }
+
+    /** 仅返回手动翻译缓存，不显示预存中文 */
+    private String pickZhOnly(ItemEntity item, int position) {
+        return translatedCache.get(position);
     }
 
     // ---- 标签 ----
@@ -325,11 +406,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         TextView tvStar, tvDate;
         TextView tvBody;
         TextView tvLabelZh, tvSummaryZh;
+        TextView tvLabelReadme, tvReadme;
         TextView tvLabelUrl, tvUrl;
         TextView tvFetched;
         TextView tvLabelTags, tvTags;
         TextView tvLabelSemantic, tvSemanticTags;
-        TextView tvOpenUrl;
+        TextView tvOpenUrl, tvTranslate;
         Button btnFavorite;
 
         public ViewHolder(@NonNull View itemView) {
@@ -346,6 +428,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             tvBody = itemView.findViewById(R.id.tv_body);
             tvLabelZh = itemView.findViewById(R.id.tv_label_zh);
             tvSummaryZh = itemView.findViewById(R.id.tv_summary_zh);
+            tvLabelReadme = itemView.findViewById(R.id.tv_label_readme);
+            tvReadme = itemView.findViewById(R.id.tv_readme);
             tvLabelUrl = itemView.findViewById(R.id.tv_label_url);
             tvUrl = itemView.findViewById(R.id.tv_url);
             tvFetched = itemView.findViewById(R.id.tv_fetched);
@@ -354,6 +438,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             tvLabelSemantic = itemView.findViewById(R.id.tv_label_semantic);
             tvSemanticTags = itemView.findViewById(R.id.tv_semantic_tags);
             tvOpenUrl = itemView.findViewById(R.id.tv_open_url);
+            tvTranslate = itemView.findViewById(R.id.tv_translate);
             btnFavorite = itemView.findViewById(R.id.btn_favorite);
         }
     }

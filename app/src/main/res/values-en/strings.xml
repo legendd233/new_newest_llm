@@ -41,10 +41,18 @@
     <!-- Feed / Favorites -->
     <string name="favorite_saved">Saved</string>
     <string name="favorite_removed">Removed from favorites</string>
+    <string name="translate_button">Translate</string>
+    <string name="view_original">View Original →</string>
+    <string name="translating">Translating…</string>
 
     <!-- Misc -->
-    <string name="logout">Logout</string>
+<string name="logout">Logout</string>
     <string name="logout_confirm">Are you sure you want to logout?</string>
     <string name="logout_success">Logged out</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_favorites">Favorites</string>
     <string name="nav_me">Me</string>
+    <string name="nav_home_title">Home</string>
+    <string name="nav_favorites_title">Favorites</string>
+    <string name="nav_empty_favorites">No favorites yet. Go add some on the home page!</string>
 </resources>

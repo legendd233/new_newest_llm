@@ -37,4 +37,6 @@ public class FeedItem {
 
     @SerializedName("is_favorited")
     public boolean isFavorited;
+
+    public int rank;
 }

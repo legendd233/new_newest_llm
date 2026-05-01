@@ -119,6 +119,29 @@
                 android:lineSpacingExtra="4dp"
                 android:visibility="gone" />
 
+            <!-- README（GitHub 仓库的 README 正文） -->
+            <TextView
+                android:id="@+id/tv_label_readme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="README"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/darker_gray"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_readme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text=""
+                android:textSize="13sp"
+                android:textColor="@android:color/darker_gray"
+                android:lineSpacingExtra="3dp"
+                android:visibility="gone" />
+
             <!-- 中文翻译 -->
             <TextView
                 android:id="@+id/tv_label_zh"
@@ -219,19 +242,38 @@
                 android:textColor="@color/accent"
                 android:visibility="gone" />
 
-            <!-- 查看原文按钮 -->
-            <TextView
-                android:id="@+id/tv_open_url"
-                android:layout_width="wrap_content"
+            <!-- 翻译 + 查看原文 -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="查看原文 →"
-                android:textSize="14sp"
-                android:textColor="@color/accent"
-                android:padding="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_translate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/translate_button"
+                    android:textSize="14sp"
+                    android:textColor="@color/accent"
+                    android:padding="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground" />
+
+                <TextView
+                    android:id="@+id/tv_open_url"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/view_original"
+                    android:textSize="14sp"
+                    android:textColor="@color/accent"
+                    android:padding="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

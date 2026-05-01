@@ -8,6 +8,8 @@ import com.example.new_newest_llm.data.local.ItemDao;
 import com.example.new_newest_llm.data.local.ItemEntity;
 import com.example.new_newest_llm.data.model.FeedItem;
 import com.example.new_newest_llm.data.model.FeedResponse;
+import com.example.new_newest_llm.data.model.TranslateRequest;
+import com.example.new_newest_llm.data.model.TranslateResponse;
 import com.example.new_newest_llm.data.remote.FeedApi;
 import com.example.new_newest_llm.data.remote.RetrofitClient;
 import java.io.IOException;
@@ -105,5 +107,29 @@ public class FeedRepository {
                 mainHandler.post(onComplete);
             }
         });
+    }
+
+    /** 按需翻译：调 DeepSeek 翻译文本为中文，结果通过 onTranslated 回调 */
+    public void translate(String text, TranslateCallback callback) {
+        executor.execute(() -> {
+            try {
+                TranslateRequest req = new TranslateRequest(text);
+                retrofit2.Response<TranslateResponse> resp = api.translate(req).execute();
+                if (resp.isSuccessful() && resp.body() != null) {
+                    String result = resp.body().translated;
+                    mainHandler.post(() -> callback.onResult(result));
+                } else {
+                    mainHandler.post(() -> callback.onError("翻译失败"));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                mainHandler.post(() -> callback.onError("网络错误"));
+            }
+        });
+    }
+
+    public interface TranslateCallback {
+        void onResult(String translated);
+        void onError(String error);
     }
 }

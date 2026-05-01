@@ -5,7 +5,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {ItemEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {ItemEntity.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ItemDao itemDao();
@@ -20,7 +20,8 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             AppDatabase.class,
                             "llm_news.db"
-                    ).build();
+                    ).fallbackToDestructiveMigration()
+                     .build();
                 }
             }
         }

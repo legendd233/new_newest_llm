@@ -1,20 +1,17 @@
 package com.example.new_newest_llm;
 
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.new_newest_llm.data.local.AppDatabase;
 import com.example.new_newest_llm.data.local.ItemEntity;
 import com.example.new_newest_llm.data.repository.FeedRepository;
-import com.example.new_newest_llm.ui.auth.AuthActivity;
 import com.example.new_newest_llm.utils.LocaleHelper;
-import com.example.new_newest_llm.utils.TokenManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,19 +21,34 @@ public class MainActivity extends AppCompatActivity {
     private NewsAdapter newsAdapter;
     private List<ItemEntity> newsList = new ArrayList<>();
     private FeedRepository repository;
+    private String lastLocale;
 
     // 底部导航栏
     private TextView navHome, navFavorites, navProfile;
+    private TextView btnLang;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.wrapContext(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        lastLocale = LocaleHelper.getLanguage(this);
         setContentView(R.layout.activity_main);
 
         rvNews = findViewById(R.id.rv_news);
         navHome = findViewById(R.id.nav_home);
         navFavorites = findViewById(R.id.nav_favorites);
         navProfile = findViewById(R.id.nav_profile);
+        btnLang = findViewById(R.id.btn_lang);
+        btnLang.setText(LocaleHelper.getToggleLabel(this));
+        btnLang.setOnClickListener(v -> {
+            LocaleHelper.toggleLanguage(this);
+            LocaleHelper.applyLocale(this);
+            recreate();
+        });
 
         rvNews.setLayoutManager(new LinearLayoutManager(this));
 
@@ -46,8 +58,29 @@ public class MainActivity extends AppCompatActivity {
             // 切换收藏状态
             boolean newState = !item.isFavorited;
             repository.toggleFavorite(item.id, newState, () -> {
-                String msg = newState ? "已收藏" : "已取消收藏";
+                String msg = newState ? getString(R.string.favorite_saved) : getString(R.string.favorite_removed);
                 Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+            });
+        }, (item, position) -> {
+            // 按需翻译：发送整个 summary_en（描述 + README）去翻译
+            String text = item.summaryEn;
+            if (text == null || text.trim().isEmpty()) {
+                // 没有英文内容可翻译
+                String noContent = LocaleHelper.isChinese(MainActivity.this) ? "没有可翻译的英文内容" : "No English content to translate";
+                Toast.makeText(MainActivity.this, noContent, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            newsAdapter.setTranslating(position, true);
+            repository.translate(text, new FeedRepository.TranslateCallback() {
+                @Override
+                public void onResult(String translated) {
+                    newsAdapter.setTranslated(position, translated);
+                }
+                @Override
+                public void onError(String error) {
+                    newsAdapter.clearTranslating(position);
+                    Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
+                }
             });
         });
 
@@ -71,7 +104,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         navProfile.setOnClickListener(v -> {
-            showSettingsDialog();
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
         });
 
         // 首次拉取真实数据
@@ -81,65 +115,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // 语言切换后重建页面
+        if (!LocaleHelper.getLanguage(this).equals(lastLocale)) {
+            recreate();
+            return;
+        }
         // 从收藏页回来时，刷新收藏状态
         fetchData();
-    }
-
-    // 设置对话框：语言切换 + 退出登录
-    private void showSettingsDialog() {
-        final String[] langValues = {LocaleHelper.LANG_SYSTEM, LocaleHelper.LANG_CHINESE, LocaleHelper.LANG_ENGLISH};
-        final String[] langLabels = {
-                isChinese() ? "跟随系统" : "Follow System",
-                "中文",
-                "English"
-        };
-
-        String currentLang = LocaleHelper.getLanguage(MainActivity.this);
-        int checkedItem = 0;
-        for (int i = 0; i < langValues.length; i++) {
-            if (langValues[i].equals(currentLang)) {
-                checkedItem = i;
-                break;
-            }
-        }
-
-        final int[] selectedIndex = {checkedItem};
-
-        new AlertDialog.Builder(MainActivity.this)
-                .setTitle(isChinese() ? "设置" : "Settings")
-                .setSingleChoiceItems(langLabels, checkedItem, (dialog, which) -> {
-                    selectedIndex[0] = which;
-                })
-                .setPositiveButton(isChinese() ? "切换语言" : "Switch Language", (dialog, which) -> {
-                    String selected = langValues[selectedIndex[0]];
-                    if (!selected.equals(LocaleHelper.getLanguage(MainActivity.this))) {
-                        LocaleHelper.setLanguage(MainActivity.this, selected);
-                        LocaleHelper.applyLocale(MainActivity.this);
-                        // 重建 Activity 以生效
-                        recreate();
-                    }
-                })
-                .setNeutralButton(R.string.logout, (dialog, which) -> {
-                    new AlertDialog.Builder(MainActivity.this)
-                            .setTitle(R.string.logout)
-                            .setMessage(R.string.logout_confirm)
-                            .setPositiveButton(R.string.logout, (d, w) -> {
-                                new TokenManager(MainActivity.this).clearToken();
-                                Toast.makeText(MainActivity.this, R.string.logout_success, Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(MainActivity.this, AuthActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                                finish();
-                            })
-                            .setNegativeButton(android.R.string.cancel, null)
-                            .show();
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();
-    }
-
-    private boolean isChinese() {
-        return LocaleHelper.isChinese(this);
     }
 
     private void fetchData() {

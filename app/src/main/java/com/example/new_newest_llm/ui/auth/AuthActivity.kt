@@ -1,5 +1,6 @@
 package com.example.new_newest_llm.ui.auth
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -23,10 +24,12 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAuthBinding
     private lateinit var tokenManager: TokenManager
 
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(LocaleHelper.wrapContext(newBase!!))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 按用户偏好覆盖系统 locale（最早就调用）
-        LocaleHelper.applyLocale(this)
 
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -39,6 +42,14 @@ class AuthActivity : AppCompatActivity() {
             .build()
         WorkManager.getInstance(applicationContext)
             .enqueueUniquePeriodicWork("feed_sync", ExistingPeriodicWorkPolicy.KEEP, feedRequest)
+
+        // 语言切换按钮
+        binding.btnLang.text = LocaleHelper.getToggleLabel(this)
+        binding.btnLang.setOnClickListener {
+            LocaleHelper.toggleLanguage(this)
+            LocaleHelper.applyLocale(this)
+            recreate()
+        }
 
         val token = tokenManager.getToken()
         if (!token.isNullOrEmpty()) {
