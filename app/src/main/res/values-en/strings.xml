@@ -38,6 +38,10 @@
     <string name="err_token_revoked">Session expired, please log in again</string>
     <string name="err_network">Network error, please retry later</string>
 
+    <!-- Feed / Favorites -->
+    <string name="favorite_saved">Saved</string>
+    <string name="favorite_removed">Removed from favorites</string>
+
     <!-- Misc -->
     <string name="logout">Logout</string>
     <string name="logout_confirm">Are you sure you want to logout?</string>

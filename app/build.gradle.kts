@@ -61,6 +61,14 @@ dependencies {
     // Security
     implementation(libs.security.crypto)
 
+    // Room
+    val roomVersion = "2.7.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+
+    // WorkManager
+    implementation("androidx.work:work-runtime:2.10.0")
+
     // Lifecycle + Coroutines
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
