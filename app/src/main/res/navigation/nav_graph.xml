@@ -47,6 +47,9 @@
         <action
             android:id="@+id/action_feed_to_favorites"
             app:destination="@id/favoritesFragment" />
+        <action
+            android:id="@+id/action_feed_to_profile"
+            app:destination="@id/profileFragment" />
     </fragment>
 
     <fragment
@@ -62,5 +65,22 @@
             android:id="@+id/action_favorites_to_detail"
             app:destination="@id/detailFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.new_newest_llm.ui.profile.ProfileFragment"
+        android:label="@string/profile_title">
+        <action
+            android:id="@+id/action_profile_to_favorites"
+            app:destination="@id/favoritesFragment" />
+        <action
+            android:id="@+id/action_profile_to_change_password"
+            app:destination="@id/changePasswordFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.example.new_newest_llm.ui.profile.ChangePasswordFragment"
+        android:label="@string/change_password_title" />
 
 </navigation>

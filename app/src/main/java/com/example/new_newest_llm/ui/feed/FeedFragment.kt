@@ -1,13 +1,10 @@
 package com.example.new_newest_llm.ui.feed
 
-import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -18,7 +15,6 @@ import com.example.new_newest_llm.R
 import com.example.new_newest_llm.data.repository.FavoriteRepository
 import com.example.new_newest_llm.data.repository.FeedRepository
 import com.example.new_newest_llm.databinding.FragmentFeedBinding
-import com.example.new_newest_llm.ui.auth.AuthActivity
 import com.example.new_newest_llm.ui.common.FavoriteSyncViewModel
 import com.example.new_newest_llm.utils.TokenManager
 import com.google.gson.Gson
@@ -56,7 +52,7 @@ class FeedFragment : Fragment() {
         )[FeedViewModel::class.java]
 
         setupRecyclerView()
-        setupBottomNav(tokenManager)
+        setupBottomNav()
         observeViewModel()
 
         binding.btnRetry.setOnClickListener {
@@ -78,25 +74,13 @@ class FeedFragment : Fragment() {
         binding.rvFeed.adapter = adapter
     }
 
-    private fun setupBottomNav(tokenManager: TokenManager) {
+    private fun setupBottomNav() {
         binding.navFavorites.setOnClickListener {
             findNavController().navigate(R.id.action_feed_to_favorites)
         }
 
         binding.navMe.setOnClickListener {
-            AlertDialog.Builder(requireContext())
-                .setTitle(R.string.logout)
-                .setMessage(R.string.logout_confirm)
-                .setPositiveButton(R.string.logout) { _: DialogInterface, _: Int ->
-                    tokenManager.clearToken()
-                    Toast.makeText(requireContext(), R.string.logout_success, Toast.LENGTH_SHORT).show()
-                    val intent = Intent(requireActivity(), AuthActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    requireActivity().finish()
-                }
-                .setNegativeButton(android.R.string.cancel, null)
-                .show()
+            findNavController().navigate(R.id.action_feed_to_profile)
         }
     }
 

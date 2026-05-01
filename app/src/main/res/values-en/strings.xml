@@ -63,4 +63,20 @@
     <string name="logout_confirm">Are you sure you want to logout?</string>
     <string name="logout_success">Logged out</string>
     <string name="nav_me">Me</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Me</string>
+    <string name="menu_my_favorites">My Favorites</string>
+    <string name="menu_change_password">Change Password</string>
+    <string name="menu_language">Language</string>
+
+    <!-- Change password -->
+    <string name="change_password_title">Change Password</string>
+    <string name="change_password_button">Submit</string>
+    <string name="change_password_success">Password changed, please log in again</string>
+
+    <!-- Language -->
+    <string name="language_follow_system">Follow System</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_english">English</string>
 </resources>
