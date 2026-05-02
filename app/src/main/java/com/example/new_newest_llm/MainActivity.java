@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         navProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
             startActivity(intent);
         });
 

@@ -47,6 +47,16 @@
             android:name=".SettingsActivity"
             android:exported="false" />
 
+        <!-- 个人主页 -->
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+
+        <!-- 修改密码 -->
+        <activity
+            android:name=".ChangePasswordActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

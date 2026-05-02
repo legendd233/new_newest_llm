@@ -45,6 +45,14 @@
     <string name="view_original">查看原文 →</string>
     <string name="translating">翻译中…</string>
 
+    <!-- Profile -->
+    <string name="profile_title">个人中心</string>
+    <string name="my_favorites">我的收藏</string>
+    <string name="change_password">修改密码</string>
+    <string name="change_password_title">修改密码</string>
+    <string name="confirm_new_password">确认新密码</string>
+    <string name="password_changed">密码修改成功，请重新登录</string>
+
     <!-- Misc -->
 <string name="logout">退出登录</string>
     <string name="logout_confirm">确定要退出登录吗？</string>

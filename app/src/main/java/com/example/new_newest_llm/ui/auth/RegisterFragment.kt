@@ -13,6 +13,7 @@ import com.example.new_newest_llm.MainActivity
 import com.example.new_newest_llm.R
 import com.example.new_newest_llm.data.repository.AuthRepository
 import com.example.new_newest_llm.databinding.FragmentRegisterBinding
+import com.example.new_newest_llm.utils.SecurityAnswerHelper
 import com.example.new_newest_llm.utils.TokenManager
 import java.util.Locale
 
@@ -48,7 +49,8 @@ class RegisterFragment : Fragment() {
             val password = binding.etPassword.text?.toString() ?: ""
             val confirmPassword = binding.etConfirmPassword.text?.toString() ?: ""
             val securityAnswer = binding.etSecurityAnswer.text?.toString() ?: ""
-            val error = viewModel.register(username, password, confirmPassword, securityAnswer)
+            val normalizedAnswer = SecurityAnswerHelper.normalize(securityAnswer)
+            val error = viewModel.register(username, password, confirmPassword, normalizedAnswer)
             if (error != null) {
                 showError(error)
             }

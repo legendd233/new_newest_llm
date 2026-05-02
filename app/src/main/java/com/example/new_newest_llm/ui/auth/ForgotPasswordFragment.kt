@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.new_newest_llm.R
 import com.example.new_newest_llm.data.repository.AuthRepository
 import com.example.new_newest_llm.databinding.FragmentForgotPasswordBinding
+import com.example.new_newest_llm.utils.SecurityAnswerHelper
 import com.example.new_newest_llm.utils.TokenManager
 import java.util.Locale
 
@@ -50,7 +51,8 @@ class ForgotPasswordFragment : Fragment() {
             val username = binding.etUsername.text?.toString() ?: ""
             val securityAnswer = binding.etSecurityAnswer.text?.toString() ?: ""
             val newPassword = binding.etNewPassword.text?.toString() ?: ""
-            val error = viewModel.resetPassword(username, securityAnswer, newPassword)
+            val normalizedAnswer = SecurityAnswerHelper.normalize(securityAnswer)
+            val error = viewModel.resetPassword(username, normalizedAnswer, newPassword)
             if (error != null) {
                 showError(error)
             }

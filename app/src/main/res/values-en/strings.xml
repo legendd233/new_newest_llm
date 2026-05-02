@@ -45,6 +45,14 @@
     <string name="view_original">View Original →</string>
     <string name="translating">Translating…</string>
 
+    <!-- Profile -->
+    <string name="profile_title">My Profile</string>
+    <string name="my_favorites">My Favorites</string>
+    <string name="change_password">Change Password</string>
+    <string name="change_password_title">Change Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="password_changed">Password changed, please log in again</string>
+
     <!-- Misc -->
 <string name="logout">Logout</string>
     <string name="logout_confirm">Are you sure you want to logout?</string>
