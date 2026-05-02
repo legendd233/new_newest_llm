@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Basic Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Neutral Minimalist Palette -->
-    <color name="bg_background">#F8FAFC</color> <!-- Light grayish blue background -->
+    <!-- Neutral Minimalist Palette (Slate + Cyan + Indigo) -->
+    <color name="bg_background">#F8FAFC</color>
     <color name="bg_card">#FFFFFF</color>
 
-    <color name="text_primary">#0F172A</color> <!-- Very dark blue-gray for titles -->
-    <color name="text_secondary">#475569</color> <!-- Medium blue-gray for body text -->
-    <color name="text_muted">#94A3B8</color> <!-- Light blue-gray for metadata -->
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#475569</color>
+    <color name="text_muted">#94A3B8</color>
 
-    <!-- Sophisticated Accents -->
-    <color name="accent_blue">#3B82F6</color> <!-- Clean blue for links/actions -->
-    <color name="accent_indigo">#6366F1</color> <!-- Indigo for tags -->
-    <color name="ai_glow">#E0F2FE</color> <!-- Subtle background for AI-related labels -->
-    <color name="ai_text">#0369A1</color> <!-- Deep blue for AI-related text -->
+    <!-- Accents — 青色 + 靛蓝（中低饱和，醒目但不刺眼） -->
+    <color name="accent_blue">#2C7A8B</color>
+    <color name="accent_indigo">#4B5688</color>
 
-    <!-- Border & Dividers -->
+    <!-- AI / Insight sections — solid muted background -->
+    <color name="ai_glow">#D2E5EA</color>
+    <color name="ai_text">#2C7A8B</color>
+
+    <!-- Borders & dividers -->
     <color name="border_subtle">#E2E8F0</color>
     <color name="divider">#F1F5F9</color>
 
+    <!-- Favorites -->
+    <color name="heart_red">#EF4444</color>
+
     <!-- Legacy / Material placeholders -->
-    <color name="purple_500">#6366F1</color>
+    <color name="purple_500">#4B5688</color>
     <color name="gray">#94A3B8</color>
     <color name="primary">#0F172A</color>
     <color name="primary_variant">#1E293B</color>
-    <color name="accent">#3B82F6</color>
+    <color name="accent">#2C7A8B</color>
     <color name="on_primary">#FFFFFF</color>
-    <color name="on_accent">#FFFFFF</color>
 </resources>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ============ Typography Scale ============ -->
+
+    <style name="AppText" />
+
+    <!-- 28sp — Hero / page title -->
+    <style name="AppText.Display">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+
+    <!-- 22sp — Card-level title (profile name etc.) -->
+    <style name="AppText.Title">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+
+    <!-- 18sp — Article / list-item title -->
+    <style name="AppText.Headline">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:lineSpacingMultiplier">1.25</item>
+    </style>
+
+    <!-- 15sp — Subtitle / large action label -->
+    <style name="AppText.Subtitle">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- 14sp — Body / primary reading text -->
+    <style name="AppText.Body">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
+    <style name="AppText.BodySecondary">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
+    <!-- 13sp — Body small (helper text, translation excerpt) -->
+    <style name="AppText.BodySmall">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
+    <!-- 12sp — Caption / metadata -->
+    <style name="AppText.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/text_muted</item>
+    </style>
+
+    <!-- 11sp UPPERCASE — Overline section label -->
+    <style name="AppText.Overline">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/text_muted</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.15</item>
+    </style>
+
+    <style name="AppText.OverlineAccent">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/accent_blue</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.15</item>
+    </style>
+
+    <style name="AppText.OverlineAi">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/ai_text</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.15</item>
+    </style>
+
+    <!-- ============ Buttons ============ -->
+
+    <style name="AppButton" />
+
+    <!-- Primary filled button: dark slate bg, bold white -->
+    <style name="AppButton.Primary" parent="Widget.Material3.Button">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:backgroundTint">@color/text_primary</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <!-- ============ Cards ============ -->
+
+    <!-- Outlined card: 1dp stroke, no elevation, 20dp radius -->
+    <style name="AppCard" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeColor">@color/border_subtle</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardBackgroundColor">@color/bg_card</item>
+    </style>
+
+</resources>

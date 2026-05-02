@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_background">
 
-    <!-- Lab Style Header -->
+    <!-- Sleek Header -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -20,10 +20,12 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="@string/nav_favorites_title"
-            app:titleTextColor="@color/text_primary">
+            app:titleTextColor="@color/text_primary"
+            app:titleTextAppearance="@style/TextAppearance.Material3.TitleMedium">
 
             <TextView
                 android:id="@+id/btn_lang"
+                style="@style/AppText.OverlineAccent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
@@ -31,16 +33,14 @@
                 android:paddingHorizontal="14dp"
                 android:paddingVertical="6dp"
                 android:text="EN"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary"
                 android:background="@drawable/bg_source_tag"
+                android:backgroundTint="@color/ai_glow"
                 android:clickable="true"
                 android:focusable="true" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Content -->
+    <!-- Content Area -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="0dp"
@@ -75,15 +75,16 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <!-- Lab Style Bottom Nav with Original Labels -->
+    <!-- Sleek Bottom Nav -->
     <LinearLayout
         android:id="@+id/bottom_nav"
         android:layout_width="0dp"
-        android:layout_height="64dp"
+        android:layout_height="72dp"
         android:orientation="horizontal"
         android:gravity="center"
         android:background="@color/bg_card"
-        android:elevation="8dp"
+        android:elevation="16dp"
+        android:paddingBottom="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -95,8 +96,11 @@
             android:layout_weight="1"
             android:text="@string/nav_home"
             android:gravity="center"
-            android:textSize="12sp"
-            android:textColor="@color/text_muted" />
+            android:textSize="11sp"
+            android:textColor="@color/text_muted"
+            app:drawableTopCompat="@drawable/ic_nav_home"
+            android:drawablePadding="6dp"
+            app:drawableTint="@color/text_muted" />
 
         <TextView
             android:id="@+id/nav_favorites"
@@ -105,9 +109,12 @@
             android:layout_weight="1"
             android:text="@string/nav_favorites"
             android:gravity="center"
-            android:textSize="12sp"
+            android:textSize="11sp"
             android:textStyle="bold"
-            android:textColor="@color/accent_blue" />
+            android:textColor="@color/accent_blue"
+            app:drawableTopCompat="@drawable/ic_nav_fav"
+            android:drawablePadding="6dp"
+            app:drawableTint="@color/accent_blue" />
 
         <TextView
             android:id="@+id/nav_profile"
@@ -116,8 +123,11 @@
             android:layout_weight="1"
             android:text="@string/nav_me"
             android:gravity="center"
-            android:textSize="12sp"
-            android:textColor="@color/text_muted" />
+            android:textSize="11sp"
+            android:textColor="@color/text_muted"
+            app:drawableTopCompat="@drawable/ic_nav_profile"
+            android:drawablePadding="6dp"
+            app:drawableTint="@color/text_muted" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

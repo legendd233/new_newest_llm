@@ -4,13 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="12dp"
-    android:layout_marginVertical="6dp"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="10dp"
     app:cardBackgroundColor="@color/bg_card"
     app:cardCornerRadius="24dp"
-    app:cardElevation="0dp"
-    app:strokeColor="@color/border_subtle"
-    app:strokeWidth="1dp">
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
 
     <LinearLayout
         android:id="@+id/ll_container"
@@ -19,95 +18,88 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Header: Source and Time -->
-        <LinearLayout
+        <!-- Top Header: Source, Time and Favorite Icon -->
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="14dp">
 
-            <TextView
-                android:id="@+id/tv_source"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_source_tag"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary"
-                android:letterSpacing="0.05"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="2dp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_alignParentStart="true">
 
-            <TextView
-                android:id="@+id/tv_time"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="12dp"
-                android:textSize="12sp"
-                android:textColor="@color/text_muted" />
+                <TextView
+                    android:id="@+id/tv_source"
+                    style="@style/AppText.OverlineAi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_source_tag"
+                    android:backgroundTint="@color/ai_glow"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp" />
 
-            <TextView
+                <TextView
+                    android:id="@+id/tv_time"
+                    style="@style/AppText.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp" />
+            </LinearLayout>
+
+            <ImageView
                 android:id="@+id/btn_favorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/accent_blue"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="4dp"
-                android:background="@drawable/bg_lab_block"
-                android:clickable="true"
-                android:focusable="true" />
-        </LinearLayout>
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:padding="6dp"
+                android:src="@drawable/ic_heart_outline"
+                android:contentDescription="Favorite"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+        </RelativeLayout>
 
         <!-- Title -->
         <TextView
             android:id="@+id/tv_title"
+            style="@style/AppText.Headline"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="19sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:lineSpacingExtra="3dp" />
+            android:layout_height="wrap_content" />
 
         <!-- Summary Preview -->
         <TextView
             android:id="@+id/tv_summary"
+            style="@style/AppText.BodySecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textSize="14sp"
-            android:textColor="@color/text_secondary"
-            android:maxLines="5"
-            android:ellipsize="end"
-            android:lineSpacingExtra="4dp" />
+            android:maxLines="3"
+            android:ellipsize="end" />
 
-        <!-- ========== EXPANEDED DETAIL AREA ========== -->
+        <!-- ========== EXPANDED SECTION ========== -->
         <LinearLayout
             android:id="@+id/ll_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="20dp">
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/divider"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="20dp" />
 
-            <!-- Stats Block -->
+            <!-- Stats Bar -->
             <LinearLayout
                 android:id="@+id/ll_stats"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_lab_block"
-                android:padding="12dp"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical">
                 <TextView
                     android:id="@+id/tv_star"
                     android:layout_width="wrap_content"
@@ -115,159 +107,176 @@
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
-                    android:layout_marginEnd="16dp"/>
+                    android:background="@drawable/bg_source_tag"
+                    android:backgroundTint="@color/divider"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp"
+                    android:layout_marginEnd="12dp" />
                 <TextView
                     android:id="@+id/tv_date"
+                    style="@style/AppText.Caption"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_muted"/>
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <!-- Main Body -->
+            <!-- Main Text Content -->
             <TextView
                 android:id="@+id/tv_body"
+                style="@style/AppText.Body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textSize="14sp"
-                android:textColor="@color/text_primary"
-                android:lineSpacingExtra="5dp"
-                android:visibility="gone" />
+                android:lineSpacingMultiplier="1.6" />
 
-            <!-- README Section -->
-            <TextView
-                android:id="@+id/tv_label_readme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_muted"
-                android:visibility="gone" />
-            <TextView
-                android:id="@+id/tv_readme"
+            <!-- README (Morandi Left Border) -->
+            <LinearLayout
+                android:id="@+id/ll_readme_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_lab_block"
-                android:padding="12dp"
-                android:layout_marginTop="6dp"
-                android:textSize="13sp"
-                android:textColor="@color/text_secondary"
-                android:visibility="gone" />
+                android:orientation="horizontal"
+                android:layout_marginTop="24dp">
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/accent_indigo" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp">
+                    <TextView
+                        android:id="@+id/tv_label_readme"
+                        style="@style/AppText.Overline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="README" />
+                    <TextView
+                        android:id="@+id/tv_readme"
+                        style="@style/AppText.BodySmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp" />
+                </LinearLayout>
+            </LinearLayout>
 
-            <!-- Translation Section -->
-            <TextView
-                android:id="@+id/tv_label_zh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="@color/accent_blue"
-                android:visibility="gone" />
-            <TextView
-                android:id="@+id/tv_summary_zh"
+            <!-- AI Section (Neural Gradient Lab) -->
+            <LinearLayout
+                android:id="@+id/ll_ai_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:textSize="14sp"
-                android:textColor="@color/text_primary"
-                android:lineSpacingExtra="4dp"
-                android:visibility="gone" />
+                android:orientation="vertical"
+                android:layout_marginTop="24dp"
+                android:padding="16dp"
+                android:background="@drawable/bg_neural_section">
 
-            <!-- Source Tags -->
-            <TextView
-                android:id="@+id/tv_label_tags"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_muted"
-                android:visibility="gone" />
-            <TextView
-                android:id="@+id/tv_tags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textSize="13sp"
-                android:textColor="@color/accent_indigo"
-                android:visibility="gone" />
+                <TextView
+                    android:id="@+id/tv_label_semantic"
+                    style="@style/AppText.OverlineAi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AI INSIGHTS" />
+                <TextView
+                    android:id="@+id/tv_semantic_tags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textSize="13sp"
+                    android:textColor="@color/ai_text"
+                    android:lineSpacingMultiplier="1.5" />
 
-            <!-- AI Tags -->
-            <TextView
-                android:id="@+id/tv_label_semantic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="@color/ai_text"
-                android:visibility="gone" />
-            <TextView
-                android:id="@+id/tv_semantic_tags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_ai_tag"
-                android:layout_marginTop="6dp"
-                android:padding="10dp"
-                android:textSize="13sp"
-                android:textColor="@color/ai_text"
-                android:visibility="gone" />
+                <TextView
+                    android:id="@+id/tv_label_zh"
+                    style="@style/AppText.OverlineAi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="TRANSLATION" />
+                <TextView
+                    android:id="@+id/tv_summary_zh"
+                    style="@style/AppText.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp" />
+            </LinearLayout>
 
-            <!-- URL & Metadata -->
-            <TextView
-                android:id="@+id/tv_label_url"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_muted"
-                android:visibility="gone" />
-            <TextView
-                android:id="@+id/tv_url"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textSize="12sp"
-                android:textColor="@color/accent_blue"
-                android:ellipsize="middle"
-                android:singleLine="true"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/tv_fetched"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:textSize="11sp"
-                android:textColor="@color/text_muted"
-                android:gravity="end"
-                android:visibility="gone" />
-
-            <!-- Actions -->
+            <!-- Technical Metadata -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:orientation="vertical"
+                android:layout_marginTop="24dp">
 
                 <TextView
+                    android:id="@+id/tv_label_tags"
+                    style="@style/AppText.Overline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TECHNICAL TAGS" />
+                <TextView
+                    android:id="@+id/tv_tags"
+                    style="@style/AppText.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp" />
+
+                <TextView
+                    android:id="@+id/tv_label_url"
+                    style="@style/AppText.Overline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="SOURCE IDENTIFIER" />
+                <TextView
+                    android:id="@+id/tv_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/accent_blue"
+                    android:ellipsize="middle"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_fetched"
+                style="@style/AppText.Caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="end" />
+
+            <!-- Bottom Action Bar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
                     android:id="@+id/tv_translate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:paddingVertical="10dp"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/accent_blue"
-                    android:background="@drawable/bg_lab_block"
+                    android:paddingVertical="12dp"
+                    android:background="@drawable/bg_source_tag"
+                    android:backgroundTint="@color/ai_glow"
                     android:clickable="true"
-                    android:focusable="true" />
+                    android:focusable="true">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_translate"
+                        app:tint="@color/ai_text" />
+                    <TextView
+                        android:id="@+id/tv_translate_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="AI Analysis"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/ai_text" />
+                </LinearLayout>
 
                 <View android:layout_width="12dp" android:layout_height="0dp" />
 
@@ -277,11 +286,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:paddingVertical="10dp"
+                    android:paddingVertical="12dp"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="@color/accent_blue"
-                    android:background="@drawable/bg_lab_block"
+                    android:textColor="@color/text_primary"
+                    android:text="Access Source"
+                    android:background="@drawable/bg_source_tag"
+                    android:backgroundTint="@color/divider"
                     android:clickable="true"
                     android:focusable="true" />
             </LinearLayout>

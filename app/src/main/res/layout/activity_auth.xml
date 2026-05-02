@@ -21,6 +21,7 @@
     <!-- Lab Style Lang Toggle -->
     <TextView
         android:id="@+id/btn_lang"
+        style="@style/AppText.Overline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
@@ -28,8 +29,6 @@
         android:paddingHorizontal="14dp"
         android:paddingVertical="6dp"
         android:text="EN"
-        android:textSize="11sp"
-        android:textStyle="bold"
         android:textColor="@color/text_primary"
         android:background="@drawable/bg_source_tag"
         android:clickable="true"

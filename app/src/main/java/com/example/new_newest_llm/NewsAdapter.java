@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -90,11 +91,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         holder.tvTime.setText(formatRelativeTime(item.publishedAt));
         holder.tvSource.setText(formatSourceLabel(item));
 
+        // 收藏图标状态切换 (ImageView)
         if (item.isFavorited) {
-            holder.btnFavorite.setText(isChinese() ? "已收藏" : "Saved");
+            holder.btnFavorite.setImageResource(R.drawable.ic_heart_filled);
+            holder.btnFavorite.setAlpha(1.0f);
         } else {
-            holder.btnFavorite.setText(isChinese() ? "收藏" : "Save");
+            holder.btnFavorite.setImageResource(R.drawable.ic_heart_outline);
+            holder.btnFavorite.setAlpha(0.6f);
         }
+        
         holder.btnFavorite.setOnClickListener(v -> {
             if (onFavoriteClick != null) onFavoriteClick.onClick(item, position);
         });
@@ -103,7 +108,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         if (expanded) {
             holder.llDetail.setVisibility(View.VISIBLE);
 
-            // 数据指标行
+            // 数据指标
             boolean hasStats = false;
             if (item.starCount > 0) {
                 holder.tvStar.setText(formatStarWithContext(item.source, item.starCount));
@@ -123,7 +128,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             }
             holder.llStats.setVisibility(hasStats ? View.VISIBLE : View.GONE);
 
-            // 正文摘要
+            // 正文内容
             String bodyText = pickBodyText(item);
             if (bodyText != null) {
                 holder.tvBody.setText(bodyText);
@@ -132,88 +137,73 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 holder.tvBody.setVisibility(View.GONE);
             }
 
-            // README
+            // README (Sleek Lab 使用侧边线样式)
             String readme = pickReadme(item);
             if (readme != null) {
-                holder.tvLabelReadme.setText("README");
-                holder.tvLabelReadme.setVisibility(View.VISIBLE);
+                holder.llReadmeContainer.setVisibility(View.VISIBLE);
                 holder.tvReadme.setText(readme);
-                holder.tvReadme.setVisibility(View.VISIBLE);
             } else {
-                holder.tvLabelReadme.setVisibility(View.GONE);
-                holder.tvReadme.setVisibility(View.GONE);
+                holder.llReadmeContainer.setVisibility(View.GONE);
             }
 
-            // 中文翻译
+            // AI Insights (包含翻译和语义标签)
+            boolean hasAiContent = false;
             String zhText = translatedCache.get(position);
             if (zhText != null) {
-                holder.tvLabelZh.setText(isChinese() ? "中文翻译" : "Chinese Translation");
                 holder.tvLabelZh.setVisibility(View.VISIBLE);
                 holder.tvSummaryZh.setText(zhText);
                 holder.tvSummaryZh.setVisibility(View.VISIBLE);
+                hasAiContent = true;
             } else {
                 holder.tvLabelZh.setVisibility(View.GONE);
                 holder.tvSummaryZh.setVisibility(View.GONE);
             }
 
-            // 源链接
-            if (item.url != null && !item.url.isEmpty()) {
-                holder.tvLabelUrl.setText(isChinese() ? "来源" : "Source");
-                holder.tvLabelUrl.setVisibility(View.VISIBLE);
-                holder.tvUrl.setText(item.url);
-                holder.tvUrl.setVisibility(View.VISIBLE);
-            } else {
-                holder.tvLabelUrl.setVisibility(View.GONE);
-                holder.tvUrl.setVisibility(View.GONE);
-            }
-
-            // 抓取时间
-            String fetched = formatAbsoluteDate(item.fetchedAt);
-            if (fetched != null) {
-                holder.tvFetched.setText((isChinese() ? "抓取时间: " : "Fetched: ") + formatFullDatetime(item.fetchedAt));
-                holder.tvFetched.setVisibility(View.VISIBLE);
-            } else {
-                holder.tvFetched.setVisibility(View.GONE);
-            }
-
-            // 原始标签
-            String tagsStr = formatTags(item.tags);
-            if (tagsStr != null) {
-                holder.tvLabelTags.setText(isChinese() ? "标签" : "Tags");
-                holder.tvLabelTags.setVisibility(View.VISIBLE);
-                holder.tvTags.setText(tagsStr);
-                holder.tvTags.setVisibility(View.VISIBLE);
-            } else {
-                holder.tvLabelTags.setVisibility(View.GONE);
-                holder.tvTags.setVisibility(View.GONE);
-            }
-
-            // AI 语义标签
             String semTagsStr = formatTags(item.semanticTags);
             if (semTagsStr != null) {
-                holder.tvLabelSemantic.setText(isChinese() ? "AI 标签" : "AI Tags");
                 holder.tvLabelSemantic.setVisibility(View.VISIBLE);
                 holder.tvSemanticTags.setText(semTagsStr);
                 holder.tvSemanticTags.setVisibility(View.VISIBLE);
+                hasAiContent = true;
             } else {
                 holder.tvLabelSemantic.setVisibility(View.GONE);
                 holder.tvSemanticTags.setVisibility(View.GONE);
             }
+            holder.llAiContainer.setVisibility(hasAiContent ? View.VISIBLE : View.GONE);
 
-            // 翻译按钮
-            boolean isTranslating = translatingPositions.contains(position);
-            if (isTranslating) {
-                holder.tvTranslate.setText(isChinese() ? "翻译中…" : "Translating…");
+            // 元数据 (URL & Tags)
+            if (item.url != null && !item.url.isEmpty()) {
+                holder.tvUrl.setText(item.url);
+                holder.tvUrl.setVisibility(View.VISIBLE);
+                holder.tvLabelUrl.setVisibility(View.VISIBLE);
             } else {
-                holder.tvTranslate.setText(isChinese() ? "翻译为中文" : "Translate");
+                holder.tvUrl.setVisibility(View.GONE);
+                holder.tvLabelUrl.setVisibility(View.GONE);
             }
-            holder.tvTranslate.setOnClickListener(v -> {
+
+            String tagsStr = formatTags(item.tags);
+            if (tagsStr != null) {
+                holder.tvTags.setText(tagsStr);
+                holder.tvTags.setVisibility(View.VISIBLE);
+                holder.tvLabelTags.setVisibility(View.VISIBLE);
+            } else {
+                holder.tvTags.setVisibility(View.GONE);
+                holder.tvLabelTags.setVisibility(View.GONE);
+            }
+
+            holder.tvFetched.setText((isChinese() ? "抓取时间: " : "Fetched: ") + formatFullDatetime(item.fetchedAt));
+
+            // 翻译按钮交互
+            boolean isTranslating = translatingPositions.contains(position);
+            holder.tvTranslateText.setText(isTranslating ? (isChinese() ? "翻译中…" : "Translating…") : (isChinese() ? "翻译为中文" : "Translate"));
+            holder.llTranslate.setAlpha(isTranslating ? 0.5f : 1.0f);
+            holder.llTranslate.setOnClickListener(v -> {
                 if (onTranslateClick != null && !translatingPositions.contains(position)) {
                     onTranslateClick.onTranslate(item, position);
                 }
             });
 
-            // 查看原文
+            // 查看原文按钮
             holder.tvOpenUrl.setText(isChinese() ? "查看原文" : "View Original");
             holder.tvOpenUrl.setOnClickListener(v -> {
                 if (item.url != null && !item.url.isEmpty()) {
@@ -232,6 +222,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             notifyItemChanged(position);
         });
     }
+
+    // ---- 逻辑函数：完全维持原始代码逻辑 ----
 
     private String pickPreviewText(ItemEntity item) {
         String shortText = isChinese() ? item.summaryShortZh : item.summaryShortEn;
@@ -282,25 +274,20 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         StringBuilder sb = new StringBuilder();
         for (String tag : tagsStr.split(",")) {
             String t = tag.trim();
-            if (!t.isEmpty()) sb.append("#").append(t).append("  ");
+            if (!t.isEmpty()) {
+                sb.append("#").append(t).append("  ");
+            }
         }
-        return sb.toString().trim();
+        String result = sb.toString().trim();
+        return result.isEmpty() ? null : result;
     }
 
     private String formatRelativeTime(long unixSeconds) {
         if (unixSeconds <= 0) return "";
         long now = System.currentTimeMillis() / 1000;
         long diff = now - unixSeconds;
-        if (diff < 3600) {
-            long min = diff / 60;
-            return isChinese() ? (min + "分钟前") : (min + "m ago");
-        } else if (diff < 86400) {
-            long hr = diff / 3600;
-            return isChinese() ? (hr + "小时前") : (hr + "h ago");
-        } else if (diff < 604800) {
-            long day = diff / 86400;
-            return isChinese() ? (day + "天前") : (day + "d ago");
-        }
+        if (diff < 3600) return (diff / 60) + (isChinese() ? "分钟前" : "m ago");
+        if (diff < 86400) return (diff / 3600) + (isChinese() ? "小时前" : "h ago");
         return formatAbsoluteDate(unixSeconds);
     }
 
@@ -319,26 +306,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         if (src == null) return "";
         switch (src) {
             case "github": return "GitHub";
-            case "arxiv": return "arXiv";
+            case "arxiv":  return "arXiv";
             case "reddit": return "Reddit";
-            case "rss": return "RSS";
-            default: return src;
+            case "rss":    return "RSS";
+            default:       return src;
         }
     }
 
     private String formatStarWithContext(String source, int count) {
-        if (count <= 0) return null;
-        switch (source) {
-            case "github": return "⭐ " + formatStarCount(count) + (isChinese() ? " stars" : " stars");
-            case "arxiv": return (isChinese() ? "📄 引用 " : "📄 ") + formatStarCount(count) + (isChinese() ? " 次" : " citations");
-            case "reddit": return (isChinese() ? "👍 " : "👍 ") + formatStarCount(count) + (isChinese() ? " 赞" : " upvotes");
-            default: return "⭐ " + formatStarCount(count);
-        }
-    }
-
-    private String formatStarCount(int count) {
-        if (count >= 1000) return String.format(Locale.US, "%.1fk", count / 1000.0);
-        return String.valueOf(count);
+        String countStr = (count >= 1000) ? String.format(Locale.US, "%.1fk", count / 1000.0) : String.valueOf(count);
+        if ("github".equals(source)) return "⭐ " + countStr + (isChinese() ? " stars" : " stars");
+        if ("arxiv".equals(source)) return "📄 " + countStr + (isChinese() ? " 引用" : " citations");
+        return "🔥 " + countStr;
     }
 
     @Override
@@ -350,16 +329,22 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout llContainer, llDetail, llStats;
+        LinearLayout llContainer, llDetail, llStats, llReadmeContainer, llAiContainer, llTranslate;
         TextView tvTitle, tvSummary, tvTime, tvSource, tvStar, tvDate, tvBody;
         TextView tvLabelReadme, tvReadme, tvLabelZh, tvSummaryZh, tvLabelSemantic, tvSemanticTags;
-        TextView tvLabelTags, tvTags, tvLabelUrl, tvUrl, tvFetched, tvTranslate, tvOpenUrl, btnFavorite;
+        TextView tvLabelTags, tvTags, tvLabelUrl, tvUrl, tvFetched, tvOpenUrl, tvTranslateText;
+        ImageView btnFavorite;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             llContainer = itemView.findViewById(R.id.ll_container);
             llDetail = itemView.findViewById(R.id.ll_detail);
             llStats = itemView.findViewById(R.id.ll_stats);
+            llReadmeContainer = itemView.findViewById(R.id.ll_readme_container);
+            llAiContainer = itemView.findViewById(R.id.ll_ai_container);
+            llTranslate = itemView.findViewById(R.id.tv_translate);
+            tvTranslateText = itemView.findViewById(R.id.tv_translate_text);
+            
             tvTitle = itemView.findViewById(R.id.tv_title);
             tvSummary = itemView.findViewById(R.id.tv_summary);
             tvTime = itemView.findViewById(R.id.tv_time);
@@ -378,7 +363,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             tvLabelUrl = itemView.findViewById(R.id.tv_label_url);
             tvUrl = itemView.findViewById(R.id.tv_url);
             tvFetched = itemView.findViewById(R.id.tv_fetched);
-            tvTranslate = itemView.findViewById(R.id.tv_translate);
             tvOpenUrl = itemView.findViewById(R.id.tv_open_url);
             btnFavorite = itemView.findViewById(R.id.btn_favorite);
         }

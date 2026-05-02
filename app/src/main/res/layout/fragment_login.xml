@@ -6,51 +6,44 @@
     android:layout_height="match_parent"
     android:background="@color/bg_background">
 
-    <!-- Lab Header -->
+    <!-- Branding -->
     <TextView
         android:id="@+id/tvTitle"
+        style="@style/AppText.Display"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textSize="32sp"
-        android:textColor="@color/text_primary"
-        android:textStyle="bold"
-        android:letterSpacing="-0.02"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="80dp" />
 
     <TextView
+        android:id="@+id/tvSubTitle"
+        style="@style/AppText.OverlineAccent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ACCESS TERMINAL"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        android:letterSpacing="0.3"
-        android:textColor="@color/text_muted"
+        android:text="INTELLIGENCE TERMINAL"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="6dp" />
 
     <!-- Auth Card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cv_auth"
+        style="@style/AppCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="48dp"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="0dp"
-        app:strokeColor="@color/border_subtle"
-        app:strokeWidth="1dp"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle">
+        android:layout_marginTop="56dp"
+        app:layout_constraintTop_toBottomOf="@id/tvSubTitle">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="28dp">
 
             <!-- Username -->
             <com.google.android.material.textfield.TextInputLayout
@@ -58,10 +51,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/username"
+                app:hintTextColor="@color/text_muted"
                 app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:boxBackgroundColor="@color/divider"
-                app:hintTextColor="@color/text_muted">
+                app:boxStrokeWidthFocused="0dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etUsername"
@@ -69,13 +61,14 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:maxLength="64"
-                    android:singleLine="true"
-                    android:padding="16dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="18dp"
+                    android:textSize="15sp"
                     android:textColor="@color/text_primary"
                     android:background="@drawable/bg_lab_block" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <View android:layout_width="match_parent" android:layout_height="16dp" />
+            <View android:layout_width="match_parent" android:layout_height="18dp" />
 
             <!-- Password -->
             <com.google.android.material.textfield.TextInputLayout
@@ -84,9 +77,9 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
                 app:endIconMode="password_toggle"
+                app:hintTextColor="@color/text_muted"
                 app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:hintTextColor="@color/text_muted">
+                app:boxStrokeWidthFocused="0dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPassword"
@@ -94,44 +87,41 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
                     android:maxLength="64"
-                    android:singleLine="true"
-                    android:padding="16dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="18dp"
+                    android:textSize="15sp"
                     android:textColor="@color/text_primary"
                     android:background="@drawable/bg_lab_block" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <ProgressBar
                 android:id="@+id/progressBar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="20dp"
                 android:indeterminateTint="@color/accent_blue" />
 
             <!-- Login button -->
             <Button
                 android:id="@+id/btnSubmit"
+                style="@style/AppButton.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/login_button"
-                android:padding="16dp"
-                android:layout_marginTop="24dp"
-                android:textStyle="bold"
-                android:backgroundTint="@color/text_primary"
-                android:textColor="@color/white"
-                app:cornerRadius="12dp" />
+                android:layout_marginTop="36dp" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Footer Links -->
+    <!-- Footer -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintTop_toBottomOf="@id/cv_auth"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -142,17 +132,16 @@
             android:layout_height="wrap_content"
             android:text="@string/forgot_password_link"
             android:textColor="@color/accent_blue"
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:padding="8dp" />
 
         <TextView
             android:id="@+id/tvToRegister"
+            style="@style/AppText.BodySmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/no_account"
-            android:textColor="@color/text_secondary"
-            android:textSize="13sp"
             android:padding="8dp" />
     </LinearLayout>
 
