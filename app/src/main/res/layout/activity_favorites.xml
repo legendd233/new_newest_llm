@@ -3,75 +3,87 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_background">
 
-    <!-- 顶部标题栏 -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/purple_500"
-        app:title="@string/nav_favorites_title"
-        app:titleTextColor="@android:color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+    <!-- Lab Style Header -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_background"
+        app:elevation="0dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/btn_lang"
-            android:layout_width="40dp"
-            android:layout_height="32dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="12dp"
-            android:text="EN"
-            android:textSize="13sp"
-            android:textColor="@android:color/white"
-            android:gravity="center"
-            android:background="@drawable/bg_lang_toggle"
-            android:clickable="true"
-            android:focusable="true" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/nav_favorites_title"
+            app:titleTextColor="@color/text_primary">
 
-    </androidx.appcompat.widget.Toolbar>
+            <TextView
+                android:id="@+id/btn_lang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="6dp"
+                android:text="EN"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:background="@drawable/bg_source_tag"
+                android:clickable="true"
+                android:focusable="true" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- 下拉刷新包裹 -->
+    <!-- Content -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/app_bar"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_favorites"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_favorites"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="8dp"
+                android:clipToPadding="false" />
+
+            <TextView
+                android:id="@+id/tv_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="32dp"
+                android:text="@string/nav_empty_favorites"
+                android:textColor="@color/text_muted"
+                android:gravity="center"
+                android:visibility="gone" />
+        </FrameLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <!-- 空状态提示（没有收藏时显示） -->
-    <TextView
-        android:id="@+id/tv_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/nav_empty_favorites"
-        android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- 底部导航栏 -->
+    <!-- Lab Style Bottom Nav with Original Labels -->
     <LinearLayout
         android:id="@+id/bottom_nav"
         android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_height="64dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:background="@android:color/white"
+        android:background="@color/bg_card"
+        android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -83,7 +95,8 @@
             android:layout_weight="1"
             android:text="@string/nav_home"
             android:gravity="center"
-            android:padding="12dp" />
+            android:textSize="12sp"
+            android:textColor="@color/text_muted" />
 
         <TextView
             android:id="@+id/nav_favorites"
@@ -91,9 +104,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/nav_favorites"
-            android:textColor="@color/purple_500"
             android:gravity="center"
-            android:padding="12dp" />
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/accent_blue" />
 
         <TextView
             android:id="@+id/nav_profile"
@@ -102,8 +116,8 @@
             android:layout_weight="1"
             android:text="@string/nav_me"
             android:gravity="center"
-            android:padding="12dp" />
-
+            android:textSize="12sp"
+            android:textColor="@color/text_muted" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

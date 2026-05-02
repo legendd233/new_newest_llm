@@ -3,7 +3,7 @@ package com.example.new_newest_llm;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +13,7 @@ import com.example.new_newest_llm.utils.TokenManager;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private Button btnLogout;
+    private TextView btnLogout; // Changed from Button to TextView to match Card Lab style
 
     @Override
     protected void attachBaseContext(Context newBase) {

@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Button;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,8 +26,8 @@ import java.util.concurrent.Executors;
 public class ProfileActivity extends AppCompatActivity {
 
     private TextView tvUsername;
-    private LinearLayout btnChangePassword;
-    private Button btnLogout;
+    private TextView btnChangePassword; // XML changed to TextView for style
+    private TextView btnLogout;        // XML changed to TextView for style
     private TextView btnLang;
     private TextView navHome, navFavorites, navProfile;
     private String lastLocale;
