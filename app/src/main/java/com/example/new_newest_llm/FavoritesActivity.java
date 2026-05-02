@@ -1,14 +1,15 @@
 package com.example.new_newest_llm;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.new_newest_llm.data.local.AppDatabase;
 import com.example.new_newest_llm.data.local.ItemEntity;
 import com.example.new_newest_llm.data.repository.FeedRepository;
@@ -19,9 +20,10 @@ import java.util.List;
 public class FavoritesActivity extends AppCompatActivity {
 
     private RecyclerView rvFavorites;
+    private SwipeRefreshLayout swipeRefresh;
     private TextView tvEmpty;
-    private ImageView ivBack;
     private TextView btnLang;
+    private TextView navHome, navFavorites, navProfile;
     private NewsAdapter newsAdapter;
     private List<ItemEntity> favoriteList = new ArrayList<>();
     private FeedRepository repository;
@@ -39,8 +41,8 @@ public class FavoritesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_favorites);
 
         rvFavorites = findViewById(R.id.rv_favorites);
+        swipeRefresh = findViewById(R.id.swipe_refresh);
         tvEmpty = findViewById(R.id.tv_empty);
-        ivBack = findViewById(R.id.iv_back);
         btnLang = findViewById(R.id.btn_lang);
         btnLang.setText(LocaleHelper.getToggleLabel(this));
         btnLang.setOnClickListener(v -> {
@@ -50,11 +52,26 @@ public class FavoritesActivity extends AppCompatActivity {
         });
 
         rvFavorites.setLayoutManager(new LinearLayoutManager(this));
-
         repository = new FeedRepository(this);
+        swipeRefresh.setOnRefreshListener(() -> {
+            repository.fetchFeed(() -> swipeRefresh.setRefreshing(false));
+        });
 
-        // 返回按钮
-        ivBack.setOnClickListener(v -> finish());
+        navHome = findViewById(R.id.nav_home);
+        navFavorites = findViewById(R.id.nav_favorites);
+        navProfile = findViewById(R.id.nav_profile);
+
+        navHome.setOnClickListener(v -> {
+            Intent intent = new Intent(FavoritesActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            finish();
+        });
+        navFavorites.setOnClickListener(v -> { });
+        navProfile.setOnClickListener(v -> {
+            startActivity(new Intent(FavoritesActivity.this, ProfileActivity.class));
+            finish();
+        });
 
         // 设置适配器
         newsAdapter = new NewsAdapter(this, favoriteList, (item, position) -> {

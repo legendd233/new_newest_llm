@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.new_newest_llm.data.local.AppDatabase;
 import com.example.new_newest_llm.data.local.ItemEntity;
 import com.example.new_newest_llm.data.repository.FeedRepository;
@@ -17,6 +18,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private SwipeRefreshLayout swipeRefresh;
     private RecyclerView rvNews;
     private NewsAdapter newsAdapter;
     private List<ItemEntity> newsList = new ArrayList<>();
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         rvNews = findViewById(R.id.rv_news);
+        swipeRefresh = findViewById(R.id.swipe_refresh);
         navHome = findViewById(R.id.nav_home);
         navFavorites = findViewById(R.id.nav_favorites);
         navProfile = findViewById(R.id.nav_profile);
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         rvNews.setLayoutManager(new LinearLayoutManager(this));
+        swipeRefresh.setOnRefreshListener(this::fetchData);
 
         repository = new FeedRepository(this);
 
@@ -97,15 +101,11 @@ public class MainActivity extends AppCompatActivity {
         navHome.setOnClickListener(v -> {
             // 已经在首页，不做跳转
         });
-
         navFavorites.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, FavoritesActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(MainActivity.this, FavoritesActivity.class));
         });
-
         navProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         });
 
         // 首次拉取真实数据
@@ -125,8 +125,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchData() {
-        repository.fetchFeed(() -> {
-            // LiveData 自动更新 UI
-        });
+        swipeRefresh.setRefreshing(true);
+        repository.fetchFeed(() -> swipeRefresh.setRefreshing(false));
     }
 }

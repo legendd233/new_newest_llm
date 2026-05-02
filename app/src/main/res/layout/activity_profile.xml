@@ -34,18 +34,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- 返回按钮 -->
-    <ImageView
-        android:id="@+id/iv_back"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:padding="12dp"
-        android:src="@android:drawable/ic_menu_revert"
-        android:contentDescription="@string/back_to_login"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar" />
-
     <!-- 用户头像区域 -->
     <LinearLayout
         android:id="@+id/ll_user_info"
@@ -82,50 +70,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- 菜单项：我的收藏 -->
-    <LinearLayout
-        android:id="@+id/btn_favorites"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingStart="24dp"
-        android:paddingEnd="16dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?android:attr/selectableItemBackground"
-        app:layout_constraintTop_toBottomOf="@id/divider1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/my_favorites"
-            android:textSize="16sp"
-            android:textColor="?android:textColorPrimary" />
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@android:drawable/ic_media_ff"
-            android:alpha="0.3" />
-
-    </LinearLayout>
-
-    <!-- 分隔线 -->
-    <View
-        android:id="@+id/divider2"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:alpha="0.2"
-        android:layout_marginHorizontal="24dp"
-        app:layout_constraintTop_toBottomOf="@id/btn_favorites"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <!-- 菜单项：修改密码 -->
     <LinearLayout
         android:id="@+id/btn_change_password"
@@ -138,7 +82,7 @@
         android:clickable="true"
         android:focusable="true"
         android:background="?android:attr/selectableItemBackground"
-        app:layout_constraintTop_toBottomOf="@id/divider2"
+        app:layout_constraintTop_toBottomOf="@id/divider1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -160,7 +104,7 @@
 
     <!-- 分隔线 -->
     <View
-        android:id="@+id/divider3"
+        android:id="@+id/divider2"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
@@ -180,8 +124,50 @@
         android:backgroundTint="@color/primary"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/divider3"
+        app:layout_constraintTop_toBottomOf="@id/divider2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 底部导航栏 -->
+    <LinearLayout
+        android:id="@+id/bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/nav_home"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_home"
+            android:gravity="center"
+            android:padding="12dp" />
+
+        <TextView
+            android:id="@+id/nav_favorites"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_favorites"
+            android:gravity="center"
+            android:padding="12dp" />
+
+        <TextView
+            android:id="@+id/nav_profile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_me"
+            android:textColor="@color/purple_500"
+            android:gravity="center"
+            android:padding="12dp" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

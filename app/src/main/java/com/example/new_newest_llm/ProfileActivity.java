@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,11 +26,10 @@ import java.util.concurrent.Executors;
 public class ProfileActivity extends AppCompatActivity {
 
     private TextView tvUsername;
-    private ImageView ivBack;
-    private LinearLayout btnFavorites;
     private LinearLayout btnChangePassword;
     private Button btnLogout;
     private TextView btnLang;
+    private TextView navHome, navFavorites, navProfile;
     private String lastLocale;
     private String username = "";
 
@@ -51,8 +48,6 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         tvUsername = findViewById(R.id.tv_username);
-        ivBack = findViewById(R.id.iv_back);
-        btnFavorites = findViewById(R.id.btn_favorites);
         btnChangePassword = findViewById(R.id.btn_change_password);
         btnLogout = findViewById(R.id.btn_logout);
         btnLang = findViewById(R.id.btn_lang);
@@ -64,12 +59,21 @@ public class ProfileActivity extends AppCompatActivity {
             recreate();
         });
 
-        ivBack.setOnClickListener(v -> finish());
+        navHome = findViewById(R.id.nav_home);
+        navFavorites = findViewById(R.id.nav_favorites);
+        navProfile = findViewById(R.id.nav_profile);
 
-        btnFavorites.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, FavoritesActivity.class);
+        navHome.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
+            finish();
         });
+        navFavorites.setOnClickListener(v -> {
+            startActivity(new Intent(ProfileActivity.this, FavoritesActivity.class));
+            finish();
+        });
+        navProfile.setOnClickListener(v -> { });
 
         btnChangePassword.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, ChangePasswordActivity.class);
